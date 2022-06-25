@@ -10,13 +10,16 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.primer.mc.Main;
 
+import static ru.primer.mc.Utils.message;
+import static ru.primer.mc.Utils.messageNotPlayer;
+
 public class CommandMoney implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         FileConfiguration cfg = Main.getInstance().getConfig();
 
         if (!(s instanceof Player)) {
-            System.out.println(ChatColor.translateAlternateColorCodes('&', cfg.getString("not-player")));
+            messageNotPlayer(cfg);
             return true;
         }
 
@@ -24,12 +27,12 @@ public class CommandMoney implements CommandExecutor {
         String money = ChatColor.GREEN + String.valueOf((int) Main.getEcon().getBalance(p)) + "$";
 
         if (!p.hasPermission("primeeconomy.money")) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("no-permission")));
+            message(cfg.getString("no-permission"), p);
             return true;
         }
 
         if (args.length < 1) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("your-balance").replace("%amount%", money)));
+            message(cfg.getString("your-balance").replace("%amount%", money), p);
             return true;
         }
 
@@ -37,11 +40,11 @@ public class CommandMoney implements CommandExecutor {
         String moneyTarget = ChatColor.GREEN + String.valueOf((int) Main.getEcon().getBalance(target)) + "$";
 
         if (target != null) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("player-balance").replace("%amount%", moneyTarget)));
+            message(cfg.getString("player-balance").replace("%amount%", moneyTarget), p);
             return true;
         }
 
-        p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("invalid-player")));
+        message(cfg.getString("invalid-player"), p);
         return true;
     }
 }

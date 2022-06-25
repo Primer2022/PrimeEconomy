@@ -1,5 +1,6 @@
 package ru.primer.mc.Commands;
 
+import com.google.common.xml.XmlEscapers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,6 +11,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.primer.mc.Main;
 
+import static ru.primer.mc.Utils.message;
+import static ru.primer.mc.Utils.messageNotPlayer;
+
 public class CommandEco implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
@@ -17,14 +21,14 @@ public class CommandEco implements CommandExecutor {
         FileConfiguration cfg = Main.getInstance().getConfig();
 
         if (!(s instanceof Player)) {
-            System.out.println(ChatColor.translateAlternateColorCodes('&', cfg.getString("not-player")));
+            messageNotPlayer(cfg);
             return true;
         }
 
         Player p = (Player) s;
 
         if (!p.hasPermission("primeeconomy.eco")) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("no-permission")));
+            message(cfg.getString("no-permission"), p);
             return true;
         }
 
@@ -39,17 +43,17 @@ public class CommandEco implements CommandExecutor {
         try {
             number = Integer.parseInt(args[2]);
         } catch (NumberFormatException e) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("not-int")));
+            message(cfg.getString("not-int"), p);
             return true;
         }
 
         if (number < 0) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("positive-number")));
+            message(cfg.getString("positive-number"), p);
             return true;
         }
 
         if (target == null) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("invalid-player")));
+            message(cfg.getString("invalid-player"), p);
             return true;
         }
 
@@ -62,9 +66,9 @@ public class CommandEco implements CommandExecutor {
                 Main.getEcon().depositPlayer(target, number);
                 String newBalance = ChatColor.GREEN + String.valueOf((int) Main.getEcon().getBalance(target)) + "$";
 
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("give-sender").replace("%name%", target.getName()).replace("%amount%", money)));
-                target.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("give-target").replace("%amount%", money)));
-                target.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("new-balance").replace("%balance", newBalance)));
+                message(cfg.getString("give-sender").replace("%name%", target.getName()).replace("%amount%", money), p);
+                message(cfg.getString("give-target").replace("%amount%", money), target);
+                message(cfg.getString("new-balance").replace("%balance", newBalance), target);
 
                 break;
             }
@@ -78,8 +82,8 @@ public class CommandEco implements CommandExecutor {
                     Main.getEcon().depositPlayer(target, -difference);
                 }
 
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("set-sender").replace("%name%", target.getName()).replace("%amount%", money)));
-                target.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("set-target").replace("%amount%", money)));
+                message(cfg.getString("set-sender").replace("%name%", target.getName()).replace("%amount%", money), p);
+                message(cfg.getString("set-target").replace("%amount%", money), target);
 
                 break;
             }
@@ -88,9 +92,9 @@ public class CommandEco implements CommandExecutor {
                 if (currentBalance - number >= 0) {
                     Main.getEcon().withdrawPlayer(target, number);
                     String newBalance = String.valueOf(Main.getEcon().getBalance(target));
-                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("take-sender").replace("%name%", target.getName()).replace("%amount%", money)));
-                    target.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("take-target").replace("%amount%", money)));
-                    target.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("new-balance").replace("%balance%", newBalance)));
+                    message(cfg.getString("take-sender").replace("%name%", target.getName()).replace("%amount%", money), p);
+                    message(cfg.getString("take-target").replace("%amount%", money), target);
+                    message(cfg.getString("new-balance").replace("%balance%", newBalance), target);
                     return true;
                 }
 

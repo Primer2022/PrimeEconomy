@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.primer.mc.Main;
 
+import static ru.primer.mc.Utils.message;
+import static ru.primer.mc.Utils.messageNotPlayer;
+
 public class CommandPay implements CommandExecutor {
 
     @Override
@@ -17,14 +20,14 @@ public class CommandPay implements CommandExecutor {
         FileConfiguration cfg = Main.getInstance().getConfig();
 
         if (!(s instanceof Player)) {
-            System.out.println(ChatColor.translateAlternateColorCodes('&', cfg.getString("not-player")));
+            messageNotPlayer(cfg);
             return true;
         }
 
         Player p = (Player) s;
 
         if (!p.hasPermission("primeeconomy.pay")) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("no-permission")));
+            message(cfg.getString("no-permission"), p);
             return true;
         }
 
@@ -37,27 +40,29 @@ public class CommandPay implements CommandExecutor {
         try {
             number = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("not-int")));
+            message(cfg.getString("not-int"), p);
             return true;
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
         int sender = (int) Main.getEcon().getBalance(p);
-        String moneyPay = ChatColor.GREEN + String.valueOf((int) number) + "$";
+        String money = ChatColor.GREEN + String.valueOf((int) number) + "$";
 
         if ((sender - number) >= 0) {
             Main.getEcon().withdrawPlayer(p, number);
-            Main.getEcon().depositPlayer(target, number);
+            Main.getEcon().depositPlayer(target, number);;
+
             String newBalancePlayer = ChatColor.GREEN + String.valueOf((int) Main.getEcon().getBalance(p)) + "$";
             String newBalanceTarget = ChatColor.GREEN + String.valueOf((int) Main.getEcon().getBalance(target)) + "$";
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("send-money").replace("%name%", p.getName()).replace("%amount%", moneyPay)));
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("new-balance").replace("%balance%", newBalancePlayer)));
-            target.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("accept-money").replace("%name%", p.getName()).replace("%amount%", moneyPay)));
-            target.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("new-balance").replace("%balance%", newBalanceTarget)));
+            message(cfg.getString("send-money").replace("%name%", p.getName()).replace("%amount%", money), p);
+            message(cfg.getString("new-balance").replace("%balance%", newBalancePlayer), p);
+
+            message(cfg.getString("accept-money").replace("%name%", p.getName()).replace("%amount%", money), target);
+            message(cfg.getString("new-balance").replace("%balance%", newBalanceTarget), target);
             return true;
         }
 
-        p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("above-your-balance")));
+        p.sendMessage(cfg.getString("above-your-balance").replace('&', '§'));
         return true;
     }
 }
