@@ -1,0 +1,13 @@
+name: PrimeEconomy
+version: '${project.version}'
+main: ru.primer.mc.Main
+api-version: 1.16
+authors: [ Primer_Legend ]
+depend: [Vault]
+commands:
+  money:
+    aliases: [balance]
+  economy:
+    aliases: [eco]
+  pay:
+    aliases: [transfer]
