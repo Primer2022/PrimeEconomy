@@ -68,7 +68,7 @@ public class CommandEco implements CommandExecutor {
 
                 message(cfg.getString("give-sender").replace("%name%", target.getName()).replace("%amount%", money), p);
                 message(cfg.getString("give-target").replace("%amount%", money), target);
-                message(cfg.getString("new-balance").replace("%balance", newBalance), target);
+                message(cfg.getString("new-balance").replace("%balance%", newBalance), target);
 
                 break;
             }
