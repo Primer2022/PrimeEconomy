@@ -13,20 +13,28 @@ import ru.primer.mc.Main;
 public class CommandEco implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
-        Player p = (Player) s;
-        Player target = Bukkit.getPlayerExact(args[1]);
+
         FileConfiguration cfg = Main.getInstance().getConfig();
+
+        if (!(s instanceof Player)) {
+            System.out.println(ChatColor.translateAlternateColorCodes('&', cfg.getString("not-player")));
+            return true;
+        }
+
+        Player p = (Player) s;
 
         if (!p.hasPermission("primeeconomy.eco")) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString("no-permission")));
             return true;
         }
 
-        int number;
 
         if (args.length != 3) {
             return true;
         }
+
+        int number;
+        Player target = Bukkit.getPlayerExact(args[1]);
 
         try {
             number = Integer.parseInt(args[2]);

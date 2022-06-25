@@ -20,6 +20,7 @@ public class CommandPay implements CommandExecutor {
             System.out.println(ChatColor.translateAlternateColorCodes('&', cfg.getString("not-player")));
             return true;
         }
+
         Player p = (Player) s;
 
         if (!p.hasPermission("primeeconomy.pay")) {
