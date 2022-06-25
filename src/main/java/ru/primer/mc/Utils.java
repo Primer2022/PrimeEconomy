@@ -12,4 +12,5 @@ public class Utils {
     public static void messageNotPlayer(FileConfiguration cfg) {
         System.out.println(cfg.getString("not-player").replace('&', '§'));
     }
+
 }

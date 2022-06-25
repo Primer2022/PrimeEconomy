@@ -54,9 +54,9 @@ public class CommandPay implements CommandExecutor {
 
             String newBalancePlayer = ChatColor.GREEN + String.valueOf((int) Main.getEcon().getBalance(p)) + "$";
             String newBalanceTarget = ChatColor.GREEN + String.valueOf((int) Main.getEcon().getBalance(target)) + "$";
+
             message(cfg.getString("send-money").replace("%name%", target.getName()).replace("%amount%", money), p);
             message(cfg.getString("new-balance").replace("%balance%", newBalancePlayer), p);
-
             message(cfg.getString("accept-money").replace("%name%", p.getName()).replace("%amount%", money), target);
             message(cfg.getString("new-balance").replace("%balance%", newBalanceTarget), target);
             return true;

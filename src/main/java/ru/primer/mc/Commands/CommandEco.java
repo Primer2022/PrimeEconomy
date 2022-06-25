@@ -92,6 +92,7 @@ public class CommandEco implements CommandExecutor {
                 if (currentBalance - number >= 0) {
                     Main.getEcon().withdrawPlayer(target, number);
                     String newBalance = String.valueOf(Main.getEcon().getBalance(target));
+
                     message(cfg.getString("take-sender").replace("%name%", target.getName()).replace("%amount%", money), p);
                     message(cfg.getString("take-target").replace("%amount%", money), target);
                     message(cfg.getString("new-balance").replace("%balance%", newBalance), target);
