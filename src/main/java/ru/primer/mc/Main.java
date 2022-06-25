@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 public final class Main extends JavaPlugin {
 
-    private static final Logger log = Logger.getLogger("Minecraft");
     private static Economy economy;
 
     private static Main instance;
@@ -24,7 +23,6 @@ public final class Main extends JavaPlugin {
         saveDefaultConfig();
 
         if (!setupEconomy() ) {
-            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
